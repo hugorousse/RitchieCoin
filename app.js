@@ -1,345 +1,46 @@
-window.addEventListener('load', async () => {
-    if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-        } catch (error) {
-            console.log('User denied account access');
-        }
-    } else if (window.web3) {
-        window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-        console.log('Web3 provider not found. Please install Metamask.');
-    }
+// Remplacez le contenu de cette variable par l'adresse du contrat RitchieCoinAirdrop déployé
+const contractAddress = "0xC10dd91dB7449e3D26EE632C0A90b052F71748f6";
 
-    const contractAddress = '0xd9145CCE52D386f254917e481eB44e9943F39138'; // Remplacer par l'adresse du contrat RitchieCoin déployé
-    const contractABI = [
-        {
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "account",
-                    "type": "address"
-                }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "balances",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "decimals",
-            "outputs": [
-                {
-                    "internalType": "uint8",
-                    "name": "",
-                    "type": "uint8"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getProposalCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "proposalId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getProposalDescription",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "proposalId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getProposalVoteCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "account",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "proposalId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getWeightedVote",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "name",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "proposals",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "description",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "voteCount",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "snapshotTotals",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "snapshots",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "recipient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "transfer",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "proposalId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "vote",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
-    ];
-    
-    const ritchieCoin = new window.web3.eth.Contract(contractABI, contractAddress);
-    
-    document.getElementById('getBalanceButton').addEventListener('click', async () => {
-        const accountAddress = document.getElementById('accountAddress').value;
-        const balanceResult = document.getElementById('balanceResult');
+// Remplacez le contenu de cette variable par l'ABI réelle du contrat RitchieCoinAirdrop
+const abi = [{"inputs":[{"internalType":"address","name":"tokenAddress","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Bought","type":"event"},{"inputs":[],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"}];
 
-        try {
-            const balance = await ritchieCoin.methods.balanceOf(accountAddress).call();
-            balanceResult.textContent = `Balance: ${balance} RIC`;
-        } catch (error) {
-            balanceResult.textContent = `Error: ${error.message}`;
-        }
-    });
-    
-    document.getElementById('accountAddress').addEventListener('change', () => {
-        resetBalanceResult();
-    });
-    
-    async function getBalance() {
-        const accountAddress = document.getElementById('accountAddress').value;
-        const balanceResult = document.getElementById('balanceResult');
-        
-        try {
-            const balance = await ritchieCoin.methods.balanceOf(accountAddress).call();
-            balanceResult.textContent = `Balance: ${balance} RIC`;
-        } catch (error) {
-            balanceResult.textContent = `Error: ${error.message}`;
-        }
+const contract = new web3.eth.Contract(abi, contractAddress);
+
+// Appeler une fonction du contrat
+contract.methods.buyRitchieCoins().send({ from: myAddress, value: amount })
+  .on("transactionHash", function (hash) {
+    console.log("Transaction hash:", hash);
+  })
+  .on("receipt", function (receipt) {
+    console.log("Receipt:", receipt);
+  })
+  .on("error", function (error) {
+    console.error("Error:", error);
+  });
+
+  async function buyRitchieCoins(amount) {
+    try {
+      await contract.methods.buy({ value: ethers.BigNumber.from(1000000000000000) });
+  
+      console.log("Achat de RitchieCoins effectué avec succès");
+    } catch (error) {
+      console.error("Erreur lors de l'achat de RitchieCoins", error);
     }
-    
-    async function showProposals() {
-        const proposalList = document.getElementById('proposalList');
-        
-        try {
-            const proposalCount = await ritchieCoin.methods.getProposalCount().call();
-            
-            for (let i = 0; i < proposalCount; i++) {
-                const description = await ritchieCoin.methods.getProposalDescription(i).call();
-                const voteCount = await ritchieCoin.methods.getProposalVoteCount(i).call();
-                
-                const listItem = document.createElement('li');
-                listItem.textContent = `Proposal ${i}: ${description} (Votes: ${voteCount})`;
-                proposalList.appendChild(listItem);
-            }
-        } catch (error) {
-            proposalList.textContent = `Error: ${error.message}`;
-        }
+  }
+  
+  // Écoute l'événement click sur le bouton d'achat de RitchieCoins
+  document.getElementById("buyButton").addEventListener("click", async () => {
+    const amount = 100; // Montant de RitchieCoins à acheter
+    await buyRitchieCoins();
+  });
+
+async function checkMetaMask() {
+    if (typeof window.ethereum === "undefined") {
+      console.log("MetaMask n'est pas installé");
+      return false;
     }
-    
-    function resetBalanceResult() {
-        document.getElementById('balanceResult').textContent = '';
-    }
-    
-    document.getElementById('getBalanceButton').addEventListener('click', () => {
-        getBalance();
-    });
-    
-    showProposals();
-});
+  
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    console.log("Connecté à MetaMask");
+    return true;
+  }
